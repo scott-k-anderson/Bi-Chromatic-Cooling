@@ -1,0 +1,32 @@
+%
+%   solver.m
+%
+%   Written by: Scott Anderson
+%   Written on: July 31, 2014
+%
+%   This program was written to model the effects of a Zeeman Slower.
+
+close all
+%Create seed for random number generator.
+nbins = 100;  %for testing
+%Create random number generator uniformly distributed for tau = [0,1).
+atoms = 1e2;
+Tau = rand(atoms, 1);
+pos = 0;%rand(atoms, 1);
+T = 300;  %in units of degrees K
+K_b = 1.38e-23;    %in units of J/K
+M = 87 * 1.66e-27;	%in units of kg
+V_mp = sqrt(2*K_b*T/M); %Velocity, most probable in units of meters/second
+
+%Calculate the Tau distribution from Tau
+V = V_mp * erfinv(2 * Tau - 1);
+
+options = odeset('RelTol',1e-3,'AbsTol',1e-3);
+tspan = [0,100e-6];
+iCond = [0,0,1,V(1),pos];
+
+[t,y] = ode45('OBE', tspan, iCond, options);
+
+fid2 = figure;
+%hist(V_new, nbins);
+plot(t,y)

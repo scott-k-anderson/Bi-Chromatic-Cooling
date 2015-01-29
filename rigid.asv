@@ -1,0 +1,5 @@
+function dy = rigid(t, y, iflag, Force, M);
+dy = zeros(2,1);
+dy(1) = y(0);
+dy = y + Force/M * t;
+close all
